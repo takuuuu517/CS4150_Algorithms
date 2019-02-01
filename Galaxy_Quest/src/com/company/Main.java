@@ -1,5 +1,4 @@
 package com.company;
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -11,20 +10,12 @@ public class Main {
     static int[] no = {-2,-2};
 
     public static void main(String[] args) {
-
-
-//        int a[] = {1,1};
-//        int b[] = {1,1};
-//        boolean c = (Arrays.equals(a,b));
-//        System.out.print(c);
-
         Scanner scan = new Scanner(System.in);
         d = scan.nextInt();
         starnum = scan.nextInt();
 
         int[][] stars = new int[starnum][2];
 
-        // store every words in an array
         for (int i = 0; i < starnum; i++)
         {
             int x = scan.nextInt();
@@ -33,26 +24,7 @@ public class Main {
             stars[i] = star;
         }
 
-        for (int i = 0; i < starnum; i++)
-        {
-            for(int j = 0; j < 2; j++){}
-//                System.out.print(stars[i][j]+" ");
-
-//            System.out.println();
-        }
-
-//        System.out.println();
-//        System.out.println();
-
-
         int[][] mm = is_majority(stars,0,stars.length-1);
-        for (int i = 0; i < mm.length; i++) {
-            for (int j = 0; j < mm[0].length; j++){}
-//                System.out.print(mm[i][j] +" ");
-
-//            System.out.println();
-        }
-
 
         if(Arrays.equals(mm[0], no))
             System.out.print("NO");
@@ -62,27 +34,6 @@ public class Main {
             int c = count(mm[1],mm,fake);
             System.out.print(c);
         }
-
-
-//        starnum =10;
-//        int[][] g = {{1,1}, {1,2}, {1,3},{1,4}, {1,5}, {1,6}, {1,7}, {1,115}, {1,116}, {1,117}  };
-//        int[][] mmm = is_majority(g,0,g.length-1);
-//
-//        System.out.print("result \n\n");
-//
-//        for (int i = 0; i < mmm.length; i++) {
-//            for (int j = 0; j < mmm[0].length; j++)
-//                System.out.print(mmm[i][j] +" ");
-//
-//            System.out.println();
-//        }
-//        int[][] fake = {{-3,-3}};
-//        int c = count(mmm[1],mmm,fake);
-//        System.out.print(c);
-
-
-
-
     }
 
 
@@ -92,7 +43,6 @@ public class Main {
      */
     static int[][] is_majority(int[][] stars, int lo, int hi)
     {
-//        if(stars.length == 1) // base case
         if(lo >= hi)
         {
             int[][] majority = {{-1,-1},stars[lo]};
@@ -163,7 +113,6 @@ public class Main {
 
     }
 
-
     static int count(int[] major, int[][] arr1, int[][] arr2 )
     {
         int count=0;
@@ -179,13 +128,10 @@ public class Main {
         return count;
     }
 
-
     static boolean isSameGalaxy(int[] left, int[] right)
     {
         return  Math.pow(left[0]-right[0],2) + Math.pow(left[1]-right[1],2) <= Math.pow(d,2);
     }
-
-
 
     static int[][] merge(int[][] left, int[][] right, int length, boolean is_yes, int majority[]) {
         int[][] result = new int[length][2];
@@ -203,38 +149,26 @@ public class Main {
                     conti--;
                     continue;
                 }
-//                result[i+1] = left[i];
                 result[n] = left[i];
                 n++;
             }
-            n=left.length + conti;
+            n = left.length + conti;
             for(int i = 1; i < right.length; i++)
             {
                 if(Arrays.equals(majority,right[i]))
-                {
-//                    n--;
                     continue;
-                }
-//                result[i+left.length-1+n] = right[i];
                 result[n] = right[i];
                 n++;
             }
-
             return result;
-
         }
         else
             result[0] = no;
 
         for(int i = 1; i < left.length; i++)
-        {
             result[i] = left[i];
-        }
         for(int i = 1; i < right.length; i++)
-        {
             result[i+left.length-1] = right[i];
-        }
-
 
         return result;
     }
