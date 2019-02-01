@@ -2,6 +2,7 @@ package com.company;
 
 
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -54,6 +55,8 @@ public class Main {
         int prev = 0;
         for (int i = 0; i< arr.length; i++)
         {
+
+
             prev = count ;
             if(arr[i] != null)
             {
