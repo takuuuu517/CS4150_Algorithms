@@ -1,14 +1,12 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Map;
+import java.util.*;
 
 
 public class Main {
     private static HashMap<String, Integer> city_price = new HashMap<>();
+    private static HashMap<String, Integer> city_price_total = new HashMap<>();
+
     private static HashMap<String, ArrayList<String>> cityAccesslist = new HashMap<>(); // main list
     private static HashSet<String> visitedCity = new HashSet<>();
     private static String[][] pathes;
@@ -30,7 +28,6 @@ public class Main {
             String city = scan.next();
             int cost = scan.nextInt();
             city_price.put(city,cost);
-
             cityAccesslist.put(city, new ArrayList<>());
         }
 
@@ -51,27 +48,92 @@ public class Main {
         {
             pathes[i][0] = scan.next();
             pathes[i][1] = scan.next();
-
-            System.out.println(findCost(pathes[i][0], pathes[i][1]));
+            String a = findCost(pathes[i][0], pathes[i][1]);
+            if(a.equals("-1"))
+                System.out.println("NO");
+            else
+                System.out.println(a);
         }
 
-        System.out.print("");
+//        System.out.print("");
     }
 
     static String findCost(String cityFrom, String cityTo)
     {
+        city_price_total.clear();
+
+
+
         if(is_no(cityFrom,cityTo))
             return "NO";
+        else if(cityFrom.equals(cityTo))
+            return "0";
 
         // there is way to go... find the min cost.
         // count the cost while iterate through the list in reverse topological order
         // TODO
+        int i = post_time.indexOf(cityTo);
+        int dest = post_time.indexOf(cityFrom);
+        int result = 0;
+        while(i >= dest)
+        {
+            String city = post_time.get(i);
+            result = citycost(city, cityTo);
+            i--;
+        }
+
+        return Integer.toString(result);
+    }
 
 
+    static int citycost(String city, String cityTo)
+    {
+        int[] totalcosts = new int[cityAccesslist.get(city).size()];
+        boolean not_connected_to_dest = true;
+        int i = 0;
+        for(String connected_city: cityAccesslist.get(city))
+        {
+            if(city_price_total.containsKey(connected_city))
+            {
+                if(city_price_total.get(connected_city) == -1)
+                    totalcosts[i] = -1;
+                else
+                {
+                    not_connected_to_dest = false;
+                    totalcosts[i] = city_price_total.get(connected_city) + city_price.get(connected_city);
+                }
+            }
+            else
+                totalcosts[i] = -1;
+            i++;
+        }
+
+        if(not_connected_to_dest)
+        {
+            if(city.equals(cityTo))
+                city_price_total.put(city, 0);
+            else
+                city_price_total.put(city, -1);
+            return -1;
+        }
+
+        int mincost = getPositiveMin(totalcosts);
+        city_price_total.put(city, mincost);
+        return mincost;
+    }
 
 
-        return "0";
-
+    /**
+     *
+     * @param totalcosts
+     * @return the smallest positive integer in the array
+     */
+    private static int getPositiveMin(int[] totalcosts) {
+        Arrays.sort(totalcosts);
+        for (int cost: totalcosts)
+            if(cost != -1)
+                return cost;
+        return 0;
     }
 
 
@@ -115,18 +177,26 @@ public class Main {
      */
     static boolean is_no(String cityFrom, String cityTo)
     {
-        boolean result = true;
-        if(cityFrom.equals(cityTo))
+        if(post_time.indexOf(cityFrom) > post_time.indexOf(cityTo))
+            return true;
+        else
             return false;
-        for(String city : cityAccesslist.get(cityFrom)){
-            if(cityTo.equals(city))
-                return false;
+
+
+
+
+//        boolean result = true;
+//        if(cityFrom.equals(cityTo))
+//            return false;
+//        for(String city : cityAccesslist.get(cityFrom)){
+//            if(cityTo.equals(city))
+//                return false;
 //            result = is_no(city, cityTo);
-            return is_no(city, cityTo);
 //            if(result == false)
 //                break;
-        }
-        return result;
+//        }
+//        return result;
+
     }
 
 }
