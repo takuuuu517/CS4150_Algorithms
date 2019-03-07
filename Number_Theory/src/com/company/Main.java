@@ -6,9 +6,113 @@ import java.util.NoSuchElementException;
 
 public class Main {
 
+    static String operation;
+    static int num1;
+    static int num2;
+    static int num3;
+
     public static void main(String[] args) {
 	// write your code here
+
+        FastScanner scan = new FastScanner();
+        while (scan.hasNext())
+        {
+            int[] array;
+
+            operation = scan.next();
+            num1 = scan.nextInt();
+
+            if(!operation.equals("isprime"))
+                num2 = scan.nextInt();
+
+            if (operation.equals("exp")) {
+                num3 = scan.nextInt();
+                System.out.println(operation + " " + num1 + " " + num2+" " + num3);
+            }
+            else
+            System.out.println(operation + " " + num1 + " " + num2);
+
+
+            array = createarray(operation);
+            compute(operation, array);
+        }
     }
+
+
+    static int[] createarray(String operation){
+        int array[];
+        if(operation.equals("isprime")){
+            array = new int[1];
+            array[0] = num1;
+        }
+        else if (operation.equals("exp")){
+            array = new int[3];
+            array[0] = num1;
+            array[1] = num2;
+            array[2] = num3;
+        }
+        else{
+            array = new int[2];
+            array[0] = num1;
+            array[1] = num2;
+        }
+        return array;
+    }
+
+
+    static void compute(String operation, int[] array){
+        switch (operation){
+            case "gcd":
+                gcd(array);
+                break;
+            case "exp":
+                exp(array);
+                break;
+            case "inverse":
+                inverse(array);
+                break;
+            case "isprime":
+                isprime(array);
+                break;
+            case "key":
+                key(array);
+                break;
+            default:
+                break;
+
+
+        }
+    }
+
+
+    // 2
+    static void gcd(int[] array){
+
+    }
+
+    // 3
+    static void exp(int[] array){
+
+    }
+
+    //2
+    static void inverse(int[] array){
+
+    }
+
+    //1
+    static void isprime(int[] array){
+
+    }
+
+    // 2
+    static void key(int[] array){
+
+    }
+
+
+
+
 }
 
 
