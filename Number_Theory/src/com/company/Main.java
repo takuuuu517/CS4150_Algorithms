@@ -1,124 +1,207 @@
 package com.company;
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class Main {
 
     static String operation;
-    static int num1;
-    static int num2;
-    static int num3;
+    static long num1;
+    static long num2;
+    static long num3;
+
+    static long inverse;
 
     public static void main(String[] args) {
-	// write your code here
+        // write your code here
 
         FastScanner scan = new FastScanner();
-        while (scan.hasNext())
-        {
-            int[] array;
+        while (scan.hasNext()) {
 
             operation = scan.next();
             num1 = scan.nextInt();
 
-            if(!operation.equals("isprime"))
+            if (!operation.equals("isprime"))
                 num2 = scan.nextInt();
 
             if (operation.equals("exp")) {
                 num3 = scan.nextInt();
-                System.out.println(operation + " " + num1 + " " + num2+" " + num3);
             }
-            else
-            System.out.println(operation + " " + num1 + " " + num2);
 
+            compute(operation);
+        }
+    }
 
-            array = createarray(operation);
-            compute(operation, array);
+    static long mod(long a, long b) {
+        if (a < 0) {
+            long s = (a*(-1)) / b + 1;
+            long t = a + b * s;
+
+            return t;
+        } else {
+            return a % b;
         }
     }
 
 
-    static int[] createarray(String operation){
-        int array[];
-        if(operation.equals("isprime")){
-            array = new int[1];
-            array[0] = num1;
-        }
-        else if (operation.equals("exp")){
-            array = new int[3];
-            array[0] = num1;
-            array[1] = num2;
-            array[2] = num3;
-        }
-        else{
-            array = new int[2];
-            array[0] = num1;
-            array[1] = num2;
-        }
-        return array;
-    }
-
-
-    static void compute(String operation, int[] array){
-        switch (operation){
+    static void compute(String operation) {
+        switch (operation) {
             case "gcd":
-                gcd(array);
+                gcd();
                 break;
             case "exp":
-                exp(array);
+                exp();
                 break;
             case "inverse":
-                inverse(array);
+                inverse();
                 break;
             case "isprime":
-                isprime(array);
+                isprime();
                 break;
             case "key":
-                key(array);
+                key();
                 break;
             default:
                 break;
-
-
         }
     }
 
 
     // 2
-    static void gcd(int[] array){
+    static void gcd() {
+        long a = num1;
+        long b = num2;
 
+        System.out.println(gcd(a, b));
+    }
+
+    static long gcd(long a, long b) {
+        if (b == 0)
+            return a;
+        else
+            return gcd(b, mod(a, b));
     }
 
     // 3
-    static void exp(int[] array){
+    static void exp() {
+        long x = num1;
+        long y = num2;
+        long n = num3;
+
+        System.out.println(exp(x, y, n));
+
 
     }
 
-    //2
-    static void inverse(int[] array){
+    static long exp(long x, long y, long N) {
+        if (y == 0)
+            return 1;
+        else {
+            long z = exp(x, y / 2, N);
+            if (mod(y, 2) == 0) //y is even
+                return mod(mod(z,N) * mod(z, N), N);
+            else
+                return mod(mod(mod(x,N) * mod(z,N), N) * mod(z, N), N);
+        }
+    }
 
+
+    //2
+    static void inverse() {
+        long a = num1;
+        long n = num2;
+
+
+        if (inverse(a, n))
+            System.out.println(inverse);
+        else
+            System.out.println("none");
+    }
+
+    static boolean inverse(long a, long N) {
+        long[] array = ee(a, N);
+        if (array[2] == 1) {
+            inverse = mod(array[0], N);
+            return true;
+        } else
+            return false;
+    }
+
+    static long[] ee(long a, long b) {
+        if (b == 0)
+            return new long[]{1, 0, a};
+
+        else {
+            long[] array = ee(b, mod(a, b));
+            return new long[]{array[1], array[0] - (a / b) * array[1], array[2]};
+        }
     }
 
     //1
-    static void isprime(int[] array){
+    static void isprime() {
+        long p = num1;
+        long pminusone = num1 - 1;
+        if (p < 101) { // check everything
+            for (int a = 2; a < p; a++) {
+                if (exp(a, pminusone, p) != 1) {
+                    System.out.println("no");
+                    return;
+                }
+            }
+            System.out.println("yes");
+            return;
+        } else { // check 100
+            ThreadLocalRandom r = ThreadLocalRandom.current();
+            long randomNum;
 
+            for (int i = 0; i < 100; i++) {
+                randomNum = r.nextLong(2, p);
+                if (exp(randomNum, pminusone, p) != 1) {
+                    System.out.println("no");
+                    return;
+                }
+            }
+            System.out.println("yes");
+            return;
+        }
     }
+
 
     // 2
-    static void key(int[] array){
+    static void key() {
+        long p = num1;
+        long q = num2;
 
+        long N = p * q;
+        long phi = (p - 1) * (q - 1);
+        long e = -1;
+        long d = -1;
+
+        for (int i = 2; i < phi; i++) {
+            if (gcd(i, phi) == 1) {
+                e = i;
+                break;
+            }
+        }
+        if (inverse(e, phi))
+            d = inverse;
+
+
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(N).append(" ").append(e).append(" ").append(d);
+
+        System.out.println(sb.toString());
     }
-
-
-
-
 }
 
 
-
-
 // Reference: https://qiita.com/p_shiki37/items/a0f6aac33bf60f5f65e4
+// scanner that is faster than java scanner
 class FastScanner {
     private final InputStream in = System.in;
     private final byte[] buffer = new byte[1024];
