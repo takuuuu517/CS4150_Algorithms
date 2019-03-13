@@ -14,6 +14,7 @@ public class Main {
 
     static int money;
     static int wait;
+    static amount_wait[] amount_wait;
 
 
     public static void main(String[] args) {
@@ -23,80 +24,98 @@ public class Main {
         people = scan.nextInt();
         time= scan.nextInt();
 
-        amount = new int[time];
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        amount_wait = new amount_wait[people];
+
+        PriorityQueue<amount_wait> pq = new PriorityQueue<>();
 
 
-        for(int i = 0; i < people; i++) {
+        for (int i =0; i < people; i++){
             money = scan.nextInt();
             wait = scan.nextInt();
 
-//            if(amount[wait] == 0){
-//                amount[wait] = money;
-//                pq.add(money);
-//                while(pq.size() <= wait)
-//                    pq.add(0);
-//            }
+            amount_wait a = new amount_wait(money,wait);
+            pq.add(a);
+        }
 
-            while (pq.size() <= wait)
-                pq.add(0);
 
-            while (pq.size() > wait + 1) {
-                if (pq.peek() == 0)
-                    pq.poll();
-                else
-                    break;
+//        for (int i =0; i < people; i++){
+//            amount_wait a = pq.poll();
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(a.amount).append(" ").append(a.wait);
+//            System.out.println(sb.toString());
+//        }
+
+        int max = pq.peek().wait+1;
+
+        PriorityQueue<Integer> pq2 = new PriorityQueue<>();
+        for(int i = 0; i < max; i++)
+            pq2.add(0);
+
+        int count = 1;
+        for(int i = 0; i < people; i+= count){
+            count = 1;
+            amount_wait a =pq.poll();
+            int amount = a.amount;
+            int waittime = a.wait;
+            if(pq2.peek() < amount){
+                pq2.poll();
+                pq2.add(amount);
             }
-
-
-            if (amount[wait] == 0){
-                pq.add(money);
-                amount[wait] = money;
-            }
-            else if (pq.peek() < money) {
-                pq.add(money);
-                for(int f = 0; f < wait; f++){
-                    if(amount[f] == 0){
-                        amount[f] = money;
-                        break;
+            while(waittime == pq.peek().wait){
+                for(int f = 0; f< waittime; f++ ){
+                    a = pq.poll();
+                    if(pq2.peek() < a.amount){
+                        pq2.poll();
+                        pq2.add(a.amount);
                     }
+                    count++;
+                    if(pq.size() == 0 )
+                        break;
                 }
-                pq.poll();
             }
-
-//            else if(amount[wait] > money){
-//                if(pq.peek() < money){
-//                    pq.poll();
-//                    pq.add(money);
-//                }
-//            }
-//            else if(amount[wait] < money){
-//                int t = amount[wait];
-//                amount[wait] = money;
-//                pq.add(money);
-//                if(pq.peek() < t)
-//                    pq.poll();
-//            }
-
 
 
         }
 
         int sum = 0;
-
-        while (pq.size() != 0){
-            sum += pq.poll();
+        for(int i = 0; i < max; i++){
+            sum += pq2.poll();
         }
         System.out.println(sum);
+
+
+    }
+
+}
+
+
+class amount_wait implements  Comparable<amount_wait>{
+    public int amount;
+    public int wait;
+
+    amount_wait(int amount, int wait)
+    {
+        this.amount = amount;
+        this.wait = wait;
     }
 
 
+    @Override
+    public int compareTo(amount_wait o) {
+        int a = Integer.compare(o.wait, this.wait);
+        if(a == 0)
+            return Integer.compare(o.amount, this.amount);
+        return a;
+    }
 
-//    static void check(){
-//        for()
-//    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.amount).append(" ").append(this.wait);
+
+        return sb.toString();
+    }
 }
-
 
 
 
