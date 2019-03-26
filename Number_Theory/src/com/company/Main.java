@@ -3,6 +3,7 @@ package com.company;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
@@ -34,6 +35,24 @@ public class Main {
 
             compute(operation);
         }
+
+
+//        ArrayList<Boolean> arr = new ArrayList<>();
+//        for (int i = 2; i < 561; i++){
+//            if(exp(i,560,561) == 1)
+//                arr.add(true);
+//        }
+//
+//
+//        System.out.println(exp(2,4194303,4194304));
+//
+//        System.out.println(arr.size());
+//        num1 = 13;
+//        num2 = 17;
+//        key();
+//
+//        System.out.println(exp(100,3,667));
+
     }
 
     static long mod(long a, long b) {

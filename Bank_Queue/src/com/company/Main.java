@@ -18,7 +18,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-
         FastScanner scan = new FastScanner();
 
         people = scan.nextInt();
@@ -37,55 +36,45 @@ public class Main {
             pq.add(a);
         }
 
-
-//        for (int i =0; i < people; i++){
-//            amount_wait a = pq.poll();
-//            StringBuilder sb = new StringBuilder();
-//            sb.append(a.amount).append(" ").append(a.wait);
-//            System.out.println(sb.toString());
-//        }
-
         int max = pq.peek().wait+1;
+        int moneyqueue[] = new int[max];
 
-        PriorityQueue<Integer> pq2 = new PriorityQueue<>();
-        for(int i = 0; i < max; i++)
-            pq2.add(0);
 
-        int count = 1;
-        for(int i = 0; i < people; i+= count){
-            count = 1;
-            amount_wait a =pq.poll();
-            int amount = a.amount;
-            int waittime = a.wait;
-            if(pq2.peek() < amount){
-                pq2.poll();
-                pq2.add(amount);
+//        int s = -1;
+//        int sum = 0;
+        for(int i =0; i< people; i++){
+            amount_wait aw = pq.poll();
+//            if(s != aw.wait){
+//                if(s != -1)
+//                    sum += moneyqueue[s];
+//                s = aw.wait;
+//            }
+            int m = aw.amount;
+            if(moneyqueue[aw.wait] == 0){
+                moneyqueue[aw.wait] = m;
             }
-            while(waittime == pq.peek().wait){
-                for(int f = 0; f< waittime; f++ ){
-                    a = pq.poll();
-                    if(pq2.peek() < a.amount){
-                        pq2.poll();
-                        pq2.add(a.amount);
+            else {
+                for(int j = aw.wait; j >= 0; j--){
+                    if(moneyqueue[j] < m){
+                        int temp = moneyqueue[j];
+                        moneyqueue[j] = m;
+                        m = temp;
                     }
-                    count++;
-                    if(pq.size() == 0 )
-                        break;
                 }
             }
 
-
         }
 
-        int sum = 0;
-        for(int i = 0; i < max; i++){
-            sum += pq2.poll();
+        int sum = 0 ;
+        for(int i = 0; i<max; i++){
+            sum += moneyqueue[i];
         }
+
+
         System.out.println(sum);
-
+//        System.out.println(s);
 
     }
-
 }
 
 
@@ -99,21 +88,12 @@ class amount_wait implements  Comparable<amount_wait>{
         this.wait = wait;
     }
 
-
     @Override
     public int compareTo(amount_wait o) {
         int a = Integer.compare(o.wait, this.wait);
         if(a == 0)
             return Integer.compare(o.amount, this.amount);
         return a;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.amount).append(" ").append(this.wait);
-
-        return sb.toString();
     }
 }
 
